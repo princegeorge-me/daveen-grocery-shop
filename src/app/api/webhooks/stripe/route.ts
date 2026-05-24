@@ -3,7 +3,7 @@ import Stripe from 'stripe'
 import { stripe } from '@/lib/stripe'
 import { prisma } from '@/lib/prisma'
 import { notificationService } from '@/services/notification.service'
-import { InventoryService } from '@/services/inventory.service'
+import { inventoryService } from '@/services/inventory.service'
 import { cacheDel } from '@/lib/redis'
 import { OrderStatus, PaymentStatus } from '@prisma/client'
 
@@ -44,7 +44,7 @@ async function handlePaymentIntentSucceeded(paymentIntent: Stripe.PaymentIntent)
 
   // 3. Deduct inventory (convert reservations to actual sales)
   try {
-    await InventoryService.deductOnPayment(
+    await inventoryService.deductOnPayment(
       order.items.map((i) => ({ productId: i.productId, variantId: i.variantId ?? undefined, quantity: i.quantity })) as any
     )
   } catch (err) {
@@ -127,7 +127,7 @@ async function handlePaymentIntentFailed(paymentIntent: Stripe.PaymentIntent) {
 
   // Release inventory reservations
   try {
-    await InventoryService.releaseReservation(
+    await inventoryService.releaseReservation(
       order.items.map((i) => ({ productId: i.productId, variantId: i.variantId ?? undefined, quantity: i.quantity })) as any
     )
   } catch (err) {

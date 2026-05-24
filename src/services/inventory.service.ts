@@ -1,7 +1,7 @@
 import prisma from '@/lib/prisma'
 import type { CartItem } from '@/types'
 
-export const InventoryService = {
+export const inventoryService = {
   async reserve(items: CartItem[]): Promise<{ success: boolean; failedItem?: string }> {
     for (const item of items) {
       const inv = item.variantId
