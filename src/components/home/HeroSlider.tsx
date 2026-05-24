@@ -68,28 +68,31 @@ export default function HeroSlider() {
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      {/* ── Slide backgrounds (cross-fade) ── */}
-      {SLIDES.map((s, i) => (
-        <div
-          key={s.id}
-          className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${i === current ? 'opacity-100' : 'opacity-0'}`}
-        >
-          <Image
-            src={s.image}
-            alt={s.headline}
-            fill
-            sizes="100vw"
-            className={`object-cover ${s.position}`}
-            priority={i === 0}
-          />
-          <div className="absolute inset-0" style={{ background: s.gradient }} />
-          {/* Bottom vignette for mobile */}
-          <div className="absolute inset-0 md:hidden" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.4) 0%, transparent 50%)' }} />
-        </div>
-      ))}
+      <div className="flex h-full">
+        {/* ── Hero Section (75%) ── */}
+        <div className="w-full lg:w-3/4 relative">
+          {/* ── Slide backgrounds (cross-fade) ── */}
+          {SLIDES.map((s, i) => (
+            <div
+              key={s.id}
+              className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${i === current ? 'opacity-100' : 'opacity-0'}`}
+            >
+              <Image
+                src={s.image}
+                alt={s.headline}
+                fill
+                sizes="(max-width: 1024px) 100vw, 75vw"
+                className={`object-cover ${s.position}`}
+                priority={i === 0}
+              />
+              <div className="absolute inset-0" style={{ background: s.gradient }} />
+              {/* Bottom vignette for mobile */}
+              <div className="absolute inset-0 md:hidden" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.4) 0%, transparent 50%)' }} />
+            </div>
+          ))}
 
-      {/* ── Content ── */}
-      <div className="container-shop relative z-10 py-8 md:py-12 lg:py-16">
+          {/* ── Content ── */}
+          <div className="container-shop relative z-10 h-full py-8 md:py-12 lg:py-16 flex flex-col justify-center">
         <div className="max-w-xl lg:max-w-2xl">
           {/* Badge */}
           <div className="inline-flex items-center gap-2 bg-amber-400 text-amber-950 text-xs font-extrabold px-3 py-1.5 rounded-full uppercase tracking-wider mb-5 shadow-lg">
@@ -122,6 +125,34 @@ export default function HeroSlider() {
               {slide.cta2.label}
             </Link>
           </div>
+        </div>
+
+        {/* ── Promotional Products Section (25%) ── */}
+        <div className="hidden lg:flex w-1/4 bg-gradient-to-b from-gray-900/20 to-gray-900/40 flex-col items-center justify-center gap-4 p-6 overflow-hidden">
+          <h3 className="text-white font-bold text-sm text-center">Hot Deals</h3>
+          <div className="space-y-3 w-full">
+            {[
+              { name: 'Fresh Yam', price: '$12.99', emoji: '🥔' },
+              { name: 'Plantains', price: '$8.99', emoji: '🍌' },
+              { name: 'Catfish', price: '$18.99', emoji: '🐟' },
+            ].map((product, idx) => (
+              <div
+                key={idx}
+                className="bg-white/10 backdrop-blur-sm rounded-lg p-3 text-white text-center hover:bg-white/20 transition-all cursor-pointer animate-slide-down"
+                style={{ animationDelay: `${idx * 0.2}s` }}
+              >
+                <div className="text-2xl mb-1">{product.emoji}</div>
+                <p className="text-xs font-semibold">{product.name}</p>
+                <p className="text-xs text-amber-300">{product.price}</p>
+              </div>
+            ))}
+          </div>
+          <Link
+            href="/products"
+            className="text-white text-xs font-semibold hover:underline mt-2"
+          >
+            View All Deals →
+          </Link>
         </div>
       </div>
 
