@@ -59,12 +59,12 @@ async function getDashboardData() {
       orderBy: { quantity: 'asc' },
     }),
     prisma.$queryRaw<{ date: string; revenue: number }[]>`
-      SELECT DATE_TRUNC('day', "createdAt")::date::text AS date,
+      SELECT DATE_TRUNC('day', "created_at")::date::text AS date,
              COALESCE(SUM(total), 0)::int AS revenue
       FROM orders
-      WHERE "createdAt" >= ${last30}
+      WHERE "created_at" >= ${last30}
         AND status IN ('CONFIRMED','PROCESSING','READY','OUT_FOR_DELIVERY','DELIVERED')
-      GROUP BY DATE_TRUNC('day', "createdAt")
+      GROUP BY DATE_TRUNC('day', "created_at")
       ORDER BY date ASC
     `,
   ])

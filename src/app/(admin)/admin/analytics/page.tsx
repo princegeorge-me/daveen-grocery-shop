@@ -43,13 +43,13 @@ async function getAnalyticsData() {
       where: { status: { in: ['CONFIRMED','PROCESSING','READY','OUT_FOR_DELIVERY','DELIVERED'] }, createdAt: { gte: last30 } },
     }),
     prisma.$queryRaw<{ date: string; revenue: number; orders: number }[]>`
-      SELECT DATE_TRUNC('day', "createdAt")::date::text AS date,
+      SELECT DATE_TRUNC('day', "created_at")::date::text AS date,
              COALESCE(SUM(total), 0)::int AS revenue,
              COUNT(*)::int AS orders
       FROM orders
-      WHERE "createdAt" >= ${last30}
+      WHERE "created_at" >= ${last30}
         AND status IN ('CONFIRMED','PROCESSING','READY','OUT_FOR_DELIVERY','DELIVERED')
-      GROUP BY DATE_TRUNC('day', "createdAt")
+      GROUP BY DATE_TRUNC('day', "created_at")
       ORDER BY date ASC
     `,
     prisma.order.groupBy({ by: ['status'], _count: true }),

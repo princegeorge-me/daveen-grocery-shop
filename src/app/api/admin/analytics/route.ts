@@ -76,13 +76,13 @@ export async function GET(req: NextRequest) {
   // Revenue chart — last 30 days
   const revenueByDay = await prisma.$queryRaw<{ date: string; revenue: number; orders: number }[]>`
     SELECT
-      DATE_TRUNC('day', "createdAt")::date::text AS date,
+      DATE_TRUNC('day', "created_at")::date::text AS date,
       COALESCE(SUM(total), 0)::int AS revenue,
       COUNT(*)::int AS orders
     FROM orders
-    WHERE "createdAt" >= ${last30}
+    WHERE "created_at" >= ${last30}
       AND status IN ('CONFIRMED','PROCESSING','READY','OUT_FOR_DELIVERY','DELIVERED')
-    GROUP BY DATE_TRUNC('day', "createdAt")
+    GROUP BY DATE_TRUNC('day', "created_at")
     ORDER BY date ASC
   `
 
