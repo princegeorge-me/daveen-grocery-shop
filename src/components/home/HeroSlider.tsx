@@ -34,7 +34,7 @@ const SLIDES = [
   },
   {
     id:            3,
-    image:         '/images/meat_seafoods/goatmeat.jpg',
+    image:         '/images/meat_seafoods/hero-beef.jpg',
     position:      'object-center',
     badge:         '🔥 Best Sellers',
     headline:      'Premium Meats & Seafood,',
