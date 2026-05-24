@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader2, Mail } from 'lucide-react'
 import { ForgotPasswordSchema } from '@/validations/auth.schema'
-import { createBrowserClient } from '@/lib/supabase/client'
+import { createClient } from '@/lib/supabase/client'
 import type { z } from 'zod'
 
 type FormData = z.infer<typeof ForgotPasswordSchema>
@@ -22,7 +22,7 @@ export function ForgotPasswordForm() {
 
   const onSubmit = async (data: FormData) => {
     setServerError(null)
-    const supabase = createBrowserClient()
+    const supabase = createClient()
     const { error } = await supabase.auth.resetPasswordForEmail(data.email, {
       redirectTo: `${window.location.origin}/account/reset-password`,
     })

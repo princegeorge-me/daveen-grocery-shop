@@ -63,8 +63,8 @@ export async function updateProduct(id: string, input: UpdateProductInput) {
     })
   }
 
-  await cacheDel(\`product:\${product.slug}\`)
-  revalidatePath(\`/products/\${product.slug}\`)
+  await cacheDel(`product:${product.slug}`)
+  revalidatePath(`/products/${product.slug}`)
   revalidatePath('/admin/products')
 
   return { product }
@@ -78,7 +78,7 @@ export async function deleteProduct(id: string) {
     data:  { deletedAt: new Date(), isActive: false },
   })
 
-  await cacheDel(\`product:\${product.slug}\`)
+  await cacheDel(`product:${product.slug}`)
   revalidatePath('/admin/products')
 
   return { success: true }

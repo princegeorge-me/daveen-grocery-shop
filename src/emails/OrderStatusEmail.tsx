@@ -5,7 +5,7 @@ import {
 const STATUS_MESSAGES: Record<string, { headline: string; body: string; emoji: string }> = {
   PROCESSING: {
     emoji: '👨‍🍳',
-    headline: 'We're preparing your order',
+    headline: "We're preparing your order",
     body: 'Our team is carefully picking and packing your items.',
   },
   READY: {
