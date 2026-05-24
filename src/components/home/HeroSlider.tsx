@@ -126,6 +126,8 @@ export default function HeroSlider() {
             </Link>
           </div>
         </div>
+          </div>
+        </div>
 
         {/* ── Promotional Products Section (25%) ── */}
         <div className="hidden lg:flex w-1/4 bg-gradient-to-b from-gray-900/20 to-gray-900/40 flex-col items-center justify-center gap-4 p-6 overflow-hidden">
