@@ -21,7 +21,7 @@ const SLIDES = [
   },
   {
     id:            2,
-    image:         '/images/fresh_produce/Ghana_yam.jpg',
+    image:         '/images/fresh_produce/hero-cabbage.jpg',
     position:      'object-center',
     badge:         '🌿 Fresh Arrivals This Week',
     headline:      'Farm-Fresh Produce,',
