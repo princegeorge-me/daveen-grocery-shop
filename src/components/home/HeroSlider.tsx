@@ -62,15 +62,18 @@ export default function HeroSlider() {
 
   const slide = SLIDES[current]
 
+  const [promoSlide, setPromoSlide] = useState(0)
+  const promoImages = [
+    { id: 1, image: '/images/drinks_snacks/drinks-banner.png', title: 'Premium Drinks', category: 'Drinks & Snacks' },
+    { id: 2, image: '/images/meat_seafoods/hero-beef.jpg', title: 'Quality Meats', category: 'Meat & Seafood' },
+    { id: 3, image: '/images/fresh_produce/hero-cabbage.jpg', title: 'Fresh Produce', category: 'Fresh Arrivals' },
+  ]
+
   return (
-    <section
-      className="relative overflow-hidden min-h-[320px] md:min-h-[380px] lg:min-h-[420px]"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-    >
-      <div className="flex h-full">
-        {/* ── Hero Section (75%) ── */}
-        <div className="w-full lg:w-3/4 relative">
+    <section className="container-shop py-6">
+      <div className="flex gap-4 h-[320px] md:h-[380px] lg:h-[420px]">
+        {/* ── Hero Card (75%) ── */}
+        <div className="w-full lg:w-3/4 relative rounded-2xl overflow-hidden bg-white shadow-lg border border-gray-100">
           {/* ── Slide backgrounds (cross-fade) ── */}
           {SLIDES.map((s, i) => (
             <div
@@ -129,32 +132,61 @@ export default function HeroSlider() {
           </div>
         </div>
 
-        {/* ── Promotional Products Section (25%) ── */}
-        <div className="hidden lg:flex w-1/4 bg-gradient-to-b from-gray-900/20 to-gray-900/40 flex-col items-center justify-center gap-4 p-6 overflow-hidden">
-          <h3 className="text-white font-bold text-sm text-center">Hot Deals</h3>
-          <div className="space-y-3 w-full">
-            {[
-              { name: 'Fresh Yam', price: '$12.99', emoji: '🥔' },
-              { name: 'Plantains', price: '$8.99', emoji: '🍌' },
-              { name: 'Catfish', price: '$18.99', emoji: '🐟' },
-            ].map((product, idx) => (
+        {/* ── Promotional Image Slider (25%) ── */}
+        <div className="hidden lg:flex w-1/4 flex-col gap-2">
+          {/* Main Promo Image */}
+          <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-lg border border-gray-100 group">
+            {promoImages.map((promo, idx) => (
               <div
-                key={idx}
-                className="bg-white/10 backdrop-blur-sm rounded-lg p-3 text-white text-center hover:bg-white/20 transition-all cursor-pointer animate-slide-down"
-                style={{ animationDelay: `${idx * 0.2}s` }}
+                key={promo.id}
+                className={`absolute inset-0 transition-opacity duration-500 ${
+                  idx === promoSlide ? 'opacity-100' : 'opacity-0'
+                }`}
               >
-                <div className="text-2xl mb-1">{product.emoji}</div>
-                <p className="text-xs font-semibold">{product.name}</p>
-                <p className="text-xs text-amber-300">{product.price}</p>
+                <Image
+                  src={promo.image}
+                  alt={promo.title}
+                  fill
+                  className="object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
+                  <p className="text-xs font-semibold text-amber-300 mb-1">{promo.category}</p>
+                  <h3 className="font-bold text-lg">{promo.title}</h3>
+                </div>
               </div>
             ))}
+
+            {/* Promo Nav Arrows */}
+            <button
+              onClick={() => setPromoSlide((p) => (p - 1 + promoImages.length) % promoImages.length)}
+              className="absolute left-2 top-1/2 -translate-y-1/2 z-10 w-8 h-8 bg-white/20 hover:bg-white/40 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+              aria-label="Previous promo"
+            >
+              <ChevronLeft size={16} />
+            </button>
+            <button
+              onClick={() => setPromoSlide((p) => (p + 1) % promoImages.length)}
+              className="absolute right-2 top-1/2 -translate-y-1/2 z-10 w-8 h-8 bg-white/20 hover:bg-white/40 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+              aria-label="Next promo"
+            >
+              <ChevronRight size={16} />
+            </button>
           </div>
-          <Link
-            href="/products"
-            className="text-white text-xs font-semibold hover:underline mt-2"
-          >
-            View All Deals →
-          </Link>
+
+          {/* Promo Indicators */}
+          <div className="flex justify-center gap-2 px-2">
+            {promoImages.map((_, idx) => (
+              <button
+                key={idx}
+                onClick={() => setPromoSlide(idx)}
+                className={`rounded-full transition-all ${
+                  idx === promoSlide ? 'w-6 h-2 bg-brand-forest' : 'w-2 h-2 bg-gray-300 hover:bg-gray-400'
+                }`}
+                aria-label={`Promo ${idx + 1}`}
+              />
+            ))}
+          </div>
         </div>
       </div>
 
