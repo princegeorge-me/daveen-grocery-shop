@@ -3,7 +3,7 @@ import Stripe from 'stripe'
 import { stripe } from '@/lib/stripe'
 import { prisma } from '@/lib/prisma'
 import { notificationService } from '@/services/notification.service'
-import { inventoryService } from '@/services/inventory.service'
+import inventoryService from '@/services/inventory.service'
 import { cacheDel } from '@/lib/redis'
 import { OrderStatus, PaymentStatus } from '@prisma/client'
 
