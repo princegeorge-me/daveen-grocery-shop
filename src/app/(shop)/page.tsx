@@ -162,19 +162,10 @@ export default async function HomePage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
           {/* Card A — Free delivery */}
-          <div className="relative overflow-hidden rounded-3xl min-h-[200px] flex items-end" style={{ background: 'linear-gradient(135deg, #0f3d24 0%, #1a6b3c 60%, #2d9158 100%)' }}>
+          <div className="relative overflow-hidden rounded-3xl min-h-[200px] flex items-end" style={{ backgroundImage: 'url(/images/fresh_produce/unriped_plantain.jpg)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
+            <div className="absolute inset-0 bg-gradient-to-r from-green-900/95 via-green-800/80 to-transparent pointer-events-none" />
             <div className="absolute top-0 right-0 w-48 h-48 bg-white/5 rounded-full -translate-y-1/4 translate-x-1/4 pointer-events-none" />
             <div className="absolute bottom-0 left-16 w-32 h-32 bg-white/5 rounded-full translate-y-1/3 pointer-events-none" />
-            {/* Image inset */}
-            <div className="absolute right-0 bottom-0 w-44 h-full opacity-80">
-              <Image
-                src="/images/fresh_produce/unriped_plantain.jpg"
-                alt="Fresh plantain"
-                fill
-                className="object-cover object-center"
-                style={{ maskImage: 'linear-gradient(to left, rgba(0,0,0,0.7) 0%, transparent 100%)' }}
-              />
-            </div>
             <div className="relative z-10 p-7">
               <span className="inline-block bg-amber-400 text-amber-950 text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full mb-3">
                 Limited Offer
