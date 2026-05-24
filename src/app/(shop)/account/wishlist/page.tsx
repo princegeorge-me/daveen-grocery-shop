@@ -54,7 +54,7 @@ export default async function WishlistPage() {
           {activeItems.map(({ id, product }) => {
             const images = Array.isArray(product.images) ? product.images as any[] : []
             const imageUrl = images[0]?.url ?? null
-            const totalStock = product.inventory.reduce((s, i) => s + i.quantity, 0)
+            const totalStock = product.inventory?.quantity ?? 0
 
             return (
               <Link

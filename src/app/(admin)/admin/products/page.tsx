@@ -51,7 +51,7 @@ export default async function AdminProductsPage() {
             {products.map((product) => {
               const images = Array.isArray(product.images) ? product.images as any[] : []
               const imageUrl = images[0]?.url ?? null
-              const stock = product.inventory.reduce((sum, inv) => sum + inv.quantity, 0)
+              const stock = product.inventory?.quantity ?? 0
 
               return (
                 <tr key={product.id} className="hover:bg-gray-50 transition">
