@@ -113,27 +113,27 @@ export default async function HomePage() {
       {/* ① Announcement ticker */}
       <PromoTicker />
 
-      {/* ② Hero slideshow */}
-      <HeroSlider />
-
-      {/* ③ Trust badge strip */}
+      {/* ② Trust badge strip */}
       <section className="bg-white border-b border-gray-100">
-        <div className="container-shop py-5">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-4">
+        <div className="container-shop py-3">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-2">
             {TRUST_BADGES.map(({ icon: Icon, title, desc }) => (
-              <div key={title} className="flex items-start gap-3">
-                <div className="w-10 h-10 rounded-xl bg-brand-forest/10 flex items-center justify-center shrink-0">
-                  <Icon size={19} className="text-brand-forest" />
+              <div key={title} className="flex items-start gap-2">
+                <div className="w-8 h-8 rounded-lg bg-brand-forest/10 flex items-center justify-center shrink-0">
+                  <Icon size={16} className="text-brand-forest" />
                 </div>
                 <div>
-                  <p className="font-semibold text-sm text-gray-900">{title}</p>
-                  <p className="text-xs text-gray-500 leading-relaxed mt-0.5">{desc}</p>
+                  <p className="font-semibold text-xs text-gray-900">{title}</p>
+                  <p className="text-[10px] text-gray-500 leading-tight mt-0.5 hidden sm:block">{desc}</p>
                 </div>
               </div>
             ))}
           </div>
         </div>
       </section>
+
+      {/* ③ Hero slideshow */}
+      <HeroSlider />
 
       {/* ④ Shop by Category */}
       <section className="container-shop py-12">

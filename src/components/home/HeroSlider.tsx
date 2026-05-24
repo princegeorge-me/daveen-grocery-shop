@@ -64,7 +64,7 @@ export default function HeroSlider() {
 
   return (
     <section
-      className="relative overflow-hidden min-h-[460px] md:min-h-[540px] lg:min-h-[580px]"
+      className="relative overflow-hidden min-h-[320px] md:min-h-[380px] lg:min-h-[420px]"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
@@ -89,7 +89,7 @@ export default function HeroSlider() {
       ))}
 
       {/* ── Content ── */}
-      <div className="container-shop relative z-10 py-16 md:py-24 lg:py-32">
+      <div className="container-shop relative z-10 py-8 md:py-12 lg:py-16">
         <div className="max-w-xl lg:max-w-2xl">
           {/* Badge */}
           <div className="inline-flex items-center gap-2 bg-amber-400 text-amber-950 text-xs font-extrabold px-3 py-1.5 rounded-full uppercase tracking-wider mb-5 shadow-lg">
