@@ -3,7 +3,7 @@ import Stripe from 'stripe'
 import { stripe } from '@/lib/stripe'
 import { prisma } from '@/lib/prisma'
 import { notificationService } from '@/services/notification.service'
-import { inventoryService } from '@/services/inventory.service'
+import { InventoryService } from '@/services/inventory.service'
 import { cacheDel } from '@/lib/redis'
 import { OrderStatus, PaymentStatus } from '@prisma/client'
 
@@ -43,13 +43,13 @@ async function handlePaymentIntentSucceeded(paymentIntent: Stripe.PaymentIntent)
   })
 
   // 3. Deduct inventory (convert reservations to actual sales)
-  for (const item of order.items) {
-    try {
-      await inventoryService.deductOnPayment(item.productId, item.variantId, item.quantity)
-    } catch (err) {
-      // Log but don't fail — inventory can be reconciled manually
-      console.error(`Inventory deduction failed for product ${item.productId}:`, err)
-    }
+  try {
+    await InventoryService.deductOnPayment(
+      order.items.map((i) => ({ productId: i.productId, variantId: i.variantId ?? undefined, quantity: i.quantity })) as any
+    )
+  } catch (err) {
+    // Log but don't fail — inventory can be reconciled manually
+    console.error('Inventory deduction failed:', err)
   }
 
   // 4. Award loyalty points (1 point per dollar)
@@ -126,12 +126,12 @@ async function handlePaymentIntentFailed(paymentIntent: Stripe.PaymentIntent) {
   ])
 
   // Release inventory reservations
-  for (const item of order.items) {
-    try {
-      await inventoryService.releaseReservation(item.productId, item.variantId, item.quantity)
-    } catch (err) {
-      console.error(`Inventory release failed for product ${item.productId}:`, err)
-    }
+  try {
+    await InventoryService.releaseReservation(
+      order.items.map((i) => ({ productId: i.productId, variantId: i.variantId ?? undefined, quantity: i.quantity })) as any
+    )
+  } catch (err) {
+    console.error('Inventory release failed:', err)
   }
 
   await cacheDel(`order:${order.id}`)
