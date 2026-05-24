@@ -19,7 +19,7 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(url)
     }
     // Role check via custom claim in JWT metadata
-    const role = (user.user_metadata?.role as string) ?? 'CUSTOMER'
+    const role = (user.user_metadata?.['role'] as string) ?? 'CUSTOMER'
     if (!['ADMIN', 'SUPER_ADMIN', 'STAFF'].includes(role)) {
       return NextResponse.redirect(new URL('/', request.url))
     }
