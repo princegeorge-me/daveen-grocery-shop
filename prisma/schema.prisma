@@ -1,0 +1,444 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ═══════════════════════════════════════════════════════════════
+// ENUMS
+// ═══════════════════════════════════════════════════════════════
+
+enum UserRole {
+  CUSTOMER
+  STAFF
+  ADMIN
+  SUPER_ADMIN
+}
+
+enum WeightUnit {
+  LB
+  OZ
+  KG
+  G
+  ML
+  L
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  PROCESSING
+  READY
+  OUT_FOR_DELIVERY
+  DELIVERED
+  CANCELLED
+  REFUNDED
+}
+
+enum OrderType {
+  DELIVERY
+  PICKUP
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCEEDED
+  FAILED
+  REFUNDED
+  PARTIALLY_REFUNDED
+}
+
+enum CouponType {
+  PERCENTAGE
+  FIXED
+  FREE_SHIPPING
+}
+
+enum LoyaltyTxnType {
+  EARNED
+  REDEEMED
+  EXPIRED
+  ADJUSTED
+}
+
+enum ReferralStatus {
+  PENDING
+  COMPLETED
+  EXPIRED
+}
+
+// ═══════════════════════════════════════════════════════════════
+// USERS & AUTH
+// ═══════════════════════════════════════════════════════════════
+
+model User {
+  id            String    @id @default(cuid())
+  supabaseId    String    @unique @map("supabase_id")
+  email         String    @unique
+  firstName     String?   @map("first_name")
+  lastName      String?   @map("last_name")
+  phone         String?
+  avatarUrl     String?   @map("avatar_url")
+  role          UserRole  @default(CUSTOMER)
+  loyaltyPoints Int       @default(0) @map("loyalty_points")
+  referralCode  String    @unique @map("referral_code")
+  referredBy    String?   @map("referred_by")
+  isActive      Boolean   @default(true) @map("is_active")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+  deletedAt     DateTime? @map("deleted_at")
+
+  addresses     Address[]
+  orders        Order[]
+  reviews       Review[]
+  wishlistItems WishlistItem[]
+  loyaltyTxns   LoyaltyTransaction[]
+  referrals     Referral[]           @relation("ReferrerRelation")
+  referred      Referral?            @relation("ReferredRelation")
+
+  @@index([email])
+  @@index([supabaseId])
+  @@index([referralCode])
+  @@map("users")
+}
+
+model Address {
+  id             String        @id @default(cuid())
+  userId         String        @map("user_id")
+  label          String        @default("Home")
+  street1        String        @map("street_1")
+  street2        String?       @map("street_2")
+  city           String        @default("Chicago")
+  state          String        @default("IL")
+  zip            String
+  lat            Float?
+  lng            Float?
+  isDefault      Boolean       @default(false) @map("is_default")
+  deliveryZoneId String?       @map("delivery_zone_id")
+  createdAt      DateTime      @default(now()) @map("created_at")
+
+  user           User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  deliveryZone   DeliveryZone? @relation(fields: [deliveryZoneId], references: [id])
+  orders         Order[]
+
+  @@index([userId])
+  @@index([zip])
+  @@map("addresses")
+}
+
+// ═══════════════════════════════════════════════════════════════
+// CATALOG
+// ═══════════════════════════════════════════════════════════════
+
+model Category {
+  id          String     @id @default(cuid())
+  name        String
+  slug        String     @unique
+  description String?
+  imageUrl    String?    @map("image_url")
+  parentId    String?    @map("parent_id")
+  sortOrder   Int        @default(0) @map("sort_order")
+  isActive    Boolean    @default(true) @map("is_active")
+  createdAt   DateTime   @default(now()) @map("created_at")
+  updatedAt   DateTime   @updatedAt @map("updated_at")
+
+  parent      Category?  @relation("CategoryHierarchy", fields: [parentId], references: [id])
+  children    Category[] @relation("CategoryHierarchy")
+  products    Product[]
+
+  @@index([slug])
+  @@index([parentId])
+  @@index([isActive])
+  @@map("categories")
+}
+
+model Product {
+  id               String          @id @default(cuid())
+  name             String
+  slug             String          @unique
+  description      String?
+  shortDescription String?         @map("short_description")
+  categoryId       String          @map("category_id")
+  vendorId         String?         @map("vendor_id")
+  price            Int
+  compareAtPrice   Int?            @map("compare_at_price")
+  costPerItem      Int?            @map("cost_per_item")
+  sku              String?         @unique
+  barcode          String?
+  trackInventory   Boolean         @default(true) @map("track_inventory")
+  weight           Float?
+  weightUnit       WeightUnit      @default(LB) @map("weight_unit")
+  images           Json            @default("[]")
+  tags             String[]
+  metaTitle        String?         @map("meta_title")
+  metaDescription  String?         @map("meta_description")
+  isActive         Boolean         @default(true) @map("is_active")
+  isFeatured       Boolean         @default(false) @map("is_featured")
+  avgRating        Float           @default(0) @map("avg_rating")
+  reviewCount      Int             @default(0) @map("review_count")
+  salesCount       Int             @default(0) @map("sales_count")
+  createdAt        DateTime        @default(now()) @map("created_at")
+  updatedAt        DateTime        @updatedAt @map("updated_at")
+  deletedAt        DateTime?       @map("deleted_at")
+
+  category         Category        @relation(fields: [categoryId], references: [id])
+  variants         ProductVariant[]
+  inventory        Inventory?
+  orderItems       OrderItem[]
+  reviews          Review[]
+  wishlistItems    WishlistItem[]
+
+  @@index([slug])
+  @@index([categoryId])
+  @@index([isActive, isFeatured])
+  @@index([isActive, salesCount])
+  @@index([deletedAt])
+  @@map("products")
+}
+
+model ProductVariant {
+  id             String     @id @default(cuid())
+  productId      String     @map("product_id")
+  name           String
+  sku            String?    @unique
+  price          Int
+  compareAtPrice Int?       @map("compare_at_price")
+  options        Json       @default("{}")
+  position       Int        @default(0)
+  isActive       Boolean    @default(true) @map("is_active")
+
+  product        Product    @relation(fields: [productId], references: [id], onDelete: Cascade)
+  inventory      Inventory?
+
+  @@index([productId])
+  @@map("product_variants")
+}
+
+model Inventory {
+  id                String          @id @default(cuid())
+  productId         String?         @unique @map("product_id")
+  variantId         String?         @unique @map("variant_id")
+  quantity          Int             @default(0)
+  reservedQuantity  Int             @default(0) @map("reserved_quantity")
+  lowStockThreshold Int             @default(5) @map("low_stock_threshold")
+  updatedAt         DateTime        @updatedAt @map("updated_at")
+
+  product           Product?        @relation(fields: [productId], references: [id])
+  variant           ProductVariant? @relation(fields: [variantId], references: [id])
+
+  @@map("inventory")
+}
+
+// ═══════════════════════════════════════════════════════════════
+// ORDERS & PAYMENTS
+// ═══════════════════════════════════════════════════════════════
+
+model Order {
+  id                    String      @id @default(cuid())
+  orderNumber           String      @unique @map("order_number")
+  userId                String      @map("user_id")
+  status                OrderStatus @default(PENDING)
+  type                  OrderType   @default(DELIVERY)
+  subtotal              Int
+  tax                   Int         @default(0)
+  deliveryFee           Int         @default(0) @map("delivery_fee")
+  discount              Int         @default(0)
+  total                 Int
+  couponId              String?     @map("coupon_id")
+  deliveryAddressId     String?     @map("delivery_address_id")
+  specialInstructions   String?     @map("special_instructions")
+  scheduledAt           DateTime?   @map("scheduled_at")
+  estimatedDeliveryAt   DateTime?   @map("estimated_delivery_at")
+  deliveredAt           DateTime?   @map("delivered_at")
+  stripePaymentIntentId String?     @map("stripe_payment_intent_id")
+  createdAt             DateTime    @default(now()) @map("created_at")
+  updatedAt             DateTime    @updatedAt @map("updated_at")
+
+  user                  User        @relation(fields: [userId], references: [id])
+  deliveryAddress       Address?    @relation(fields: [deliveryAddressId], references: [id])
+  coupon                Coupon?     @relation(fields: [couponId], references: [id])
+  items                 OrderItem[]
+  payment               Payment?
+  loyaltyTxns           LoyaltyTransaction[]
+
+  @@index([userId])
+  @@index([status])
+  @@index([createdAt])
+  @@index([orderNumber])
+  @@map("orders")
+}
+
+model OrderItem {
+  id              String  @id @default(cuid())
+  orderId         String  @map("order_id")
+  productId       String  @map("product_id")
+  variantId       String? @map("variant_id")
+  quantity        Int
+  unitPrice       Int     @map("unit_price")
+  totalPrice      Int     @map("total_price")
+  productSnapshot Json    @map("product_snapshot")
+
+  order           Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product         Product @relation(fields: [productId], references: [id])
+
+  @@index([orderId])
+  @@index([productId])
+  @@map("order_items")
+}
+
+model Payment {
+  id                    String        @id @default(cuid())
+  orderId               String        @unique @map("order_id")
+  userId                String        @map("user_id")
+  amount                Int
+  currency              String        @default("usd")
+  status                PaymentStatus @default(PENDING)
+  paymentMethod         String?       @map("payment_method")
+  stripePaymentIntentId String?       @unique @map("stripe_payment_intent_id")
+  stripeChargeId        String?       @map("stripe_charge_id")
+  refundedAmount        Int           @default(0) @map("refunded_amount")
+  metadata              Json?
+  createdAt             DateTime      @default(now()) @map("created_at")
+  updatedAt             DateTime      @updatedAt @map("updated_at")
+
+  order                 Order         @relation(fields: [orderId], references: [id])
+
+  @@index([stripePaymentIntentId])
+  @@index([userId])
+  @@map("payments")
+}
+
+// ═══════════════════════════════════════════════════════════════
+// DELIVERY
+// ═══════════════════════════════════════════════════════════════
+
+model DeliveryZone {
+  id                    String    @id @default(cuid())
+  name                  String
+  zipCodes              String[]  @map("zip_codes")
+  minOrderAmount        Int       @map("min_order_amount")
+  deliveryFee           Int       @map("delivery_fee")
+  freeDeliveryThreshold Int?      @map("free_delivery_threshold")
+  estimatedMinutesMin   Int       @map("estimated_minutes_min")
+  estimatedMinutesMax   Int       @map("estimated_minutes_max")
+  isActive              Boolean   @default(true) @map("is_active")
+  sortOrder             Int       @default(0) @map("sort_order")
+
+  addresses             Address[]
+
+  @@map("delivery_zones")
+}
+
+// ═══════════════════════════════════════════════════════════════
+// PROMOTIONS & LOYALTY
+// ═══════════════════════════════════════════════════════════════
+
+model Coupon {
+  id              String     @id @default(cuid())
+  code            String     @unique
+  description     String?
+  type            CouponType
+  value           Int
+  minOrderAmount  Int?       @map("min_order_amount")
+  maxUses         Int?       @map("max_uses")
+  usesPerCustomer Int        @default(1) @map("uses_per_customer")
+  usedCount       Int        @default(0) @map("used_count")
+  startsAt        DateTime?  @map("starts_at")
+  expiresAt       DateTime?  @map("expires_at")
+  isActive        Boolean    @default(true) @map("is_active")
+  createdAt       DateTime   @default(now()) @map("created_at")
+
+  orders          Order[]
+
+  @@index([code])
+  @@index([isActive, expiresAt])
+  @@map("coupons")
+}
+
+model Promotion {
+  id          String    @id @default(cuid())
+  title       String
+  description String?
+  imageUrl    String?   @map("image_url")
+  link        String?
+  type        String    @default("BANNER")
+  position    Int       @default(0)
+  startsAt    DateTime? @map("starts_at")
+  endsAt      DateTime? @map("ends_at")
+  isActive    Boolean   @default(true) @map("is_active")
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  @@index([isActive, startsAt, endsAt])
+  @@map("promotions")
+}
+
+model LoyaltyTransaction {
+  id           String         @id @default(cuid())
+  userId       String         @map("user_id")
+  orderId      String?        @map("order_id")
+  type         LoyaltyTxnType
+  points       Int
+  balanceAfter Int            @map("balance_after")
+  description  String
+  createdAt    DateTime       @default(now()) @map("created_at")
+
+  user         User           @relation(fields: [userId], references: [id])
+  order        Order?         @relation(fields: [orderId], references: [id])
+
+  @@index([userId])
+  @@index([orderId])
+  @@map("loyalty_transactions")
+}
+
+model WishlistItem {
+  id        String   @id @default(cuid())
+  userId    String   @map("user_id")
+  productId String   @map("product_id")
+  variantId String?  @map("variant_id")
+  addedAt   DateTime @default(now()) @map("added_at")
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product   Product  @relation(fields: [productId], references: [id])
+
+  @@unique([userId, productId, variantId])
+  @@index([userId])
+  @@map("wishlist_items")
+}
+
+model Review {
+  id                 String   @id @default(cuid())
+  productId          String   @map("product_id")
+  userId             String   @map("user_id")
+  rating             Int
+  title              String?
+  body               String?
+  isVerifiedPurchase Boolean  @default(false) @map("is_verified_purchase")
+  isApproved         Boolean  @default(false) @map("is_approved")
+  createdAt          DateTime @default(now()) @map("created_at")
+
+  product            Product  @relation(fields: [productId], references: [id])
+  user               User     @relation(fields: [userId], references: [id])
+
+  @@index([productId, isApproved])
+  @@index([userId])
+  @@map("reviews")
+}
+
+model Referral {
+  id          String         @id @default(cuid())
+  referrerId  String         @map("referrer_id")
+  referredId  String         @unique @map("referred_id")
+  orderId     String?        @map("order_id")
+  status      ReferralStatus @default(PENDING)
+  rewardGiven Boolean        @default(false) @map("reward_given")
+  createdAt   DateTime       @default(now()) @map("created_at")
+
+  referrer    User   @relation("ReferrerRelation", fields: [referrerId], references: [id])
+  referred    User   @relation("ReferredRelation", fields: [referredId], references: [id])
+
+  @@map("referrals")
+}

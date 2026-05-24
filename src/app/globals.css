@@ -1,0 +1,63 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background:        0 0% 98%;
+    --foreground:        0 0% 11%;
+    --card:              0 0% 100%;
+    --card-foreground:   0 0% 11%;
+    --primary:           145 60% 26%;
+    --primary-foreground:0 0% 100%;
+    --secondary:         43 80% 45%;
+    --secondary-foreground: 0 0% 100%;
+    --muted:             210 10% 96%;
+    --muted-foreground:  215 8% 47%;
+    --accent:            145 60% 26%;
+    --accent-foreground: 0 0% 100%;
+    --destructive:       0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+    --border:            210 14% 91%;
+    --input:             210 14% 91%;
+    --ring:              145 60% 26%;
+    --radius:            0.75rem;
+  }
+
+  * { @apply border-border; }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  /* Focus rings */
+  :focus-visible {
+    @apply outline-none ring-2 ring-brand-forest ring-offset-2;
+  }
+
+  /* Smooth scroll */
+  html { scroll-behavior: smooth; }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar       { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { @apply bg-transparent; }
+  ::-webkit-scrollbar-thumb { @apply bg-border rounded-full; }
+  ::-webkit-scrollbar-thumb:hover { @apply bg-muted-foreground; }
+}
+
+@layer utilities {
+  .text-balance   { text-wrap: balance; }
+  .text-pretty    { text-wrap: pretty; }
+  .container-shop {
+    @apply w-full max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  .price {
+    @apply font-mono font-semibold tabular-nums;
+  }
+  .shimmer-bg {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+  }
+}
