@@ -193,18 +193,10 @@ export default async function HomePage() {
           </div>
 
           {/* Card B — New arrivals */}
-          <div className="relative overflow-hidden rounded-3xl min-h-[200px] flex items-end" style={{ background: 'linear-gradient(135deg, #7c1d0f 0%, #b83a1a 60%, #e8541a 100%)' }}>
+          <div className="relative overflow-hidden rounded-3xl min-h-[200px] flex items-end" style={{ backgroundImage: 'url(/images/drinks_snacks/drinks-banner.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
+            <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/70 to-transparent pointer-events-none" />
             <div className="absolute top-0 right-0 w-48 h-48 bg-white/5 rounded-full -translate-y-1/4 translate-x-1/4 pointer-events-none" />
             <div className="absolute bottom-0 left-16 w-32 h-32 bg-white/5 rounded-full translate-y-1/3 pointer-events-none" />
-            {/* Image inset */}
-            <div className="absolute right-0 bottom-0 w-44 h-full opacity-80">
-              <Image
-                src="/images/drinks_snacks/drinks-banner.png"
-                alt="Drinks & Snacks Banner"
-                fill
-                className="object-contain object-bottom pr-4"
-              />
-            </div>
             <div className="relative z-10 p-7">
               <span className="inline-flex items-center gap-1 bg-white text-orange-600 text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full mb-3">
                 <Zap size={10} className="fill-orange-600" /> Hot Picks
