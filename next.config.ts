@@ -5,9 +5,7 @@ const nextConfig: NextConfig = {
     // Type errors are tracked separately; don't block production builds
     ignoreBuildErrors: true,
   },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
+
   images: {
     remotePatterns: [
       { protocol: 'https', hostname: 'res.cloudinary.com' },
