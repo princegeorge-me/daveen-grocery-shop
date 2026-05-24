@@ -89,8 +89,8 @@ export async function GET(req: NextRequest) {
   // Top products
   const topProducts = await prisma.orderItem.groupBy({
     by: ['productId'],
-    _sum: { quantity: true, lineTotal: true },
-    orderBy: { _sum: { lineTotal: 'desc' } },
+    _sum: { quantity: true, totalPrice: true },
+    orderBy: { _sum: { totalPrice: 'desc' } },
     take: 5,
   })
   const topProductIds = topProducts.map((p) => p.productId)

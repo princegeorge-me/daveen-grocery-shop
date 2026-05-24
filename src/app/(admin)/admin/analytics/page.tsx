@@ -55,8 +55,8 @@ async function getAnalyticsData() {
     prisma.order.groupBy({ by: ['status'], _count: true }),
     prisma.orderItem.groupBy({
       by: ['productId'],
-      _sum: { quantity: true, lineTotal: true },
-      orderBy: { _sum: { lineTotal: 'desc' } },
+      _sum: { quantity: true, totalPrice: true },
+      orderBy: { _sum: { totalPrice: 'desc' } },
       take: 8,
     }),
     prisma.order.groupBy({ by: ['type'], _count: true, where: { createdAt: { gte: last30 } } }),
@@ -156,7 +156,7 @@ export default async function AdminAnalyticsPage() {
                   <p className="text-sm font-medium text-gray-900 truncate">{p.product?.name ?? 'Unknown'}</p>
                   <p className="text-xs text-gray-500">{p._sum.quantity} units sold</p>
                 </div>
-                <p className="text-sm font-bold text-brand-forest">{formatPrice(p._sum.lineTotal ?? 0)}</p>
+                <p className="text-sm font-bold text-brand-forest">{formatPrice(p._sum.totalPrice ?? 0)}</p>
               </div>
             ))}
           </div>

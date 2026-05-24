@@ -102,7 +102,7 @@ export default async function AdminOrderDetailPage({ params }: Props) {
                       <p className="text-xs text-gray-400">Qty: {item.quantity} × {formatPrice(item.unitPrice)}</p>
                     </div>
                     <p className="font-semibold text-gray-900 text-sm whitespace-nowrap">
-                      {formatPrice(item.lineTotal)}
+                      {formatPrice(item.totalPrice)}
                     </p>
                   </div>
                 )
