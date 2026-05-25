@@ -77,7 +77,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
 
   // Send SMS notification and invalidate cache only when order is out for delivery
   if (parsed.data.status === OrderStatus.OUT_FOR_DELIVERY && order.user) {
-    await notificationService.orderStatusUpdate(updated as any, order.user)
+    await notificationService.orderStatusUpdate(updated as any, order.user as any)
     await cacheDel(`order:${id}`)
   }
 
