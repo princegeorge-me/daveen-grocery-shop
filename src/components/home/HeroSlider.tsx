@@ -178,20 +178,22 @@ export default function HeroSlider() {
       </div>
 
       {/* ── Prev / Next arrows (inside hero card) ── */}
-      <button
-        onClick={prev}
-        className="absolute left-8 lg:left-80 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-black/30 hover:bg-black/50 text-white rounded-full flex items-center justify-center transition backdrop-blur-sm border border-white/20"
-        aria-label="Previous slide"
-      >
-        <ChevronLeft size={20} />
-      </button>
-      <button
-        onClick={next}
-        className="absolute right-8 lg:right-80 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-black/30 hover:bg-black/50 text-white rounded-full flex items-center justify-center transition backdrop-blur-sm border border-white/20"
-        aria-label="Next slide"
-      >
-        <ChevronRight size={20} />
-      </button>
+      <div className="absolute inset-0 z-20 pointer-events-none flex items-center justify-between group">
+        <button
+          onClick={prev}
+          className="pointer-events-auto w-8 h-8 bg-white/20 hover:bg-white/40 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity ml-2"
+          aria-label="Previous slide"
+        >
+          <ChevronLeft size={16} />
+        </button>
+        <button
+          onClick={next}
+          className="pointer-events-auto w-8 h-8 bg-white/20 hover:bg-white/40 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity mr-2"
+          aria-label="Next slide"
+        >
+          <ChevronRight size={16} />
+        </button>
+      </div>
 
       {/* ── Dot indicators ── */}
       <div className="absolute bottom-5 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2">
