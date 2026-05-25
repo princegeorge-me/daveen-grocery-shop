@@ -70,10 +70,10 @@ export default function HeroSlider() {
   ]
 
   return (
-    <section className="container-shop py-6">
-      <div className="flex gap-4 h-[320px] md:h-[380px] lg:h-[420px]">
-        {/* ── Hero Card (75%) ── */}
-        <div className="w-full lg:w-3/4 relative rounded-2xl overflow-hidden bg-white shadow-lg border border-gray-100">
+    <section className="container-shop py-4 sm:py-6">
+      <div className="flex flex-col lg:flex-row gap-3 sm:gap-4 min-h-[280px] sm:h-[320px] md:h-[380px] lg:h-[420px]">
+        {/* ── Hero Card (100% on mobile, 75% on desktop) ── */}
+        <div className="w-full lg:w-3/4 relative rounded-xl sm:rounded-2xl overflow-hidden bg-white shadow-lg border border-gray-100">
           {/* ── Slide backgrounds (cross-fade) ── */}
           {SLIDES.map((s, i) => (
             <div
