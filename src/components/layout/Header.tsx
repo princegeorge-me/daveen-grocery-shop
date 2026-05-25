@@ -1,9 +1,9 @@
 'use client'
 
 import Link           from 'next/link'
-import { ShoppingCart, Menu, Search, User, X } from 'lucide-react'
+import { ShoppingCart, Menu, Search, User, X, LayoutDashboard } from 'lucide-react'
 import { motion } from 'framer-motion'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useCartStore } from '@/stores/cart.store'
 import { useUIStore }   from '@/stores/ui.store'
 
@@ -17,8 +17,16 @@ const navLinks = [
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [isAdmin, setIsAdmin] = useState(false)
   const { itemCount, toggleCart } = useCartStore()
   const { toggleSearch }          = useUIStore()
+
+  useEffect(() => {
+    fetch('/api/me')
+      .then(r => r.json())
+      .then(d => { if (['ADMIN','SUPER_ADMIN'].includes(d.role)) setIsAdmin(true) })
+      .catch(() => {})
+  }, [])
 
   return (
     <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-border shadow-sm">
@@ -46,6 +54,15 @@ export default function Header() {
                 {link.label}
               </Link>
             ))}
+            {isAdmin && (
+              <Link
+                href="/admin"
+                className="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-forest bg-brand-forest/10 px-3 py-1.5 rounded-full hover:bg-brand-forest hover:text-white transition-all"
+              >
+                <LayoutDashboard size={14} />
+                Admin
+              </Link>
+            )}
           </nav>
 
           {/* Right actions */}
@@ -121,6 +138,16 @@ export default function Header() {
                 {link.label}
               </Link>
             ))}
+            {isAdmin && (
+              <Link
+                href="/admin"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center gap-2 text-sm font-semibold text-brand-forest bg-brand-forest/10 px-3 py-2 rounded-lg hover:bg-brand-forest hover:text-white transition-all"
+              >
+                <LayoutDashboard size={15} />
+                Admin Dashboard
+              </Link>
+            )}
           </div>
         </motion.div>
       )}
