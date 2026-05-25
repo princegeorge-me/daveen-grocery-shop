@@ -37,7 +37,6 @@ export default async function AdminOrderDetailPage({ params }: Props) {
       items: {
         include: {
           product: { select: { name: true, slug: true, images: true } },
-          variant: { select: { name: true } },
         },
       },
       deliveryAddress: true,
@@ -98,7 +97,7 @@ export default async function AdminOrderDetailPage({ params }: Props) {
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="font-medium text-gray-900 text-sm truncate">{item.product.name}</p>
-                      {item.variant && <p className="text-xs text-gray-500">{item.variant.name}</p>}
+                      {snapshot?.variantName && <p className="text-xs text-gray-500">{snapshot.variantName}</p>}
                       <p className="text-xs text-gray-400">Qty: {item.quantity} × {formatPrice(item.unitPrice)}</p>
                     </div>
                     <p className="font-semibold text-gray-900 text-sm whitespace-nowrap">
