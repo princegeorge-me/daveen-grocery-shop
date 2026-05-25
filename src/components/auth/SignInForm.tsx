@@ -30,8 +30,9 @@ export function SignInForm({ redirectTo }: Props) {
     setServerError(null)
     const result = await signIn(data)
     if (result.success) {
-      router.refresh()                        // re-sync server session
-      router.push(redirectTo || '/account')   // go to intended destination
+      router.refresh()  // re-sync server session
+      const isAdmin = ['ADMIN', 'SUPER_ADMIN'].includes(result.role ?? '')
+      router.push(redirectTo || (isAdmin ? '/admin' : '/account'))
     } else {
       setServerError(result.error ?? 'Sign in failed')
     }
