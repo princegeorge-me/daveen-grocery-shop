@@ -32,7 +32,7 @@ export function OrderStatusUpdater({ orderId, currentStatus }: Props) {
           body: JSON.stringify({ status }),
         })
         const data = await res.json()
-        if (!data.success) {
+        if (data.error) {
           setError(data.error ?? 'Update failed')
         } else {
           setSaved(true)

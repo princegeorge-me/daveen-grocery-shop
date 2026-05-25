@@ -10,7 +10,7 @@ interface Props {
 
 export default function ErrorPage({ error, reset }: Props) {
   useEffect(() => {
-    console.error('App erro:', error)
+    console.error('App error:', error)
   }, [error])
 
   return (
