@@ -75,7 +75,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     data: { status: parsed.data.status },
   })
 
-  // Send SMS notification for key status transitions
+  // Fire-and-forget: SMS + cache — don't let these crash the response
   const notifiableStatuses: OrderStatus[] = [
     OrderStatus.PROCESSING,
     OrderStatus.READY,
@@ -84,10 +84,14 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   ]
 
   if (order.user && notifiableStatuses.includes(parsed.data.status)) {
-    await notificationService.orderStatusUpdate(updated as any, order.user)
+    notificationService.orderStatusUpdate(updated as any, order.user).catch((err) => {
+      console.error('[OrderStatusUpdate] SMS notification failed:', err?.message)
+    })
   }
 
-  await cacheDel(`order:${id}`)
+  cacheDel(`order:${id}`).catch((err) => {
+    console.error('[OrderStatusUpdate] Cache delete failed:', err?.message)
+  })
 
   return NextResponse.json(apiSuccess(updated))
 }
