@@ -199,8 +199,8 @@ export default async function HomePage() {
             {/* Image inset */}
             <div className="absolute right-0 bottom-0 w-44 h-full opacity-80">
               <Image
-                src="/images/drinks_snacks/Malta-Guinness.png"
-                alt="Malta Guinness"
+                src="/images/drinks_snacks/drinks-banner.png"
+                alt="Drinks & Snacks Banner"
                 fill
                 className="object-contain object-bottom pr-4"
               />

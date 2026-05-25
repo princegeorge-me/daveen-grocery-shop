@@ -75,19 +75,11 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     data: { status: parsed.data.status },
   })
 
-  // Send SMS notification for key status transitions
-  const notifiableStatuses: OrderStatus[] = [
-    OrderStatus.PROCESSING,
-    OrderStatus.READY,
-    OrderStatus.OUT_FOR_DELIVERY,
-    OrderStatus.DELIVERED,
-  ]
-
-  if (order.user && notifiableStatuses.includes(parsed.data.status)) {
+  // Send SMS notification and invalidate cache only when order is out for delivery
+  if (parsed.data.status === OrderStatus.OUT_FOR_DELIVERY && order.user) {
     await notificationService.orderStatusUpdate(updated as any, order.user)
+    await cacheDel(`order:${id}`)
   }
-
-  await cacheDel(`order:${id}`)
 
   return NextResponse.json(apiSuccess(updated))
 }
