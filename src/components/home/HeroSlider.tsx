@@ -174,33 +174,20 @@ export default function HeroSlider() {
             </button>
           </div>
 
-          {/* Promo Indicators */}
-          <div className="flex justify-center gap-2 px-2">
-            {promoImages.map((_, idx) => (
-              <button
-                key={idx}
-                onClick={() => setPromoSlide(idx)}
-                className={`rounded-full transition-all ${
-                  idx === promoSlide ? 'w-6 h-2 bg-brand-forest' : 'w-2 h-2 bg-gray-300 hover:bg-gray-400'
-                }`}
-                aria-label={`Promo ${idx + 1}`}
-              />
-            ))}
-          </div>
         </div>
       </div>
 
-      {/* ── Prev / Next arrows ── */}
+      {/* ── Prev / Next arrows (on hero card) ── */}
       <button
         onClick={prev}
-        className="absolute left-3 md:left-5 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-black/30 hover:bg-black/50 text-white rounded-full flex items-center justify-center transition backdrop-blur-sm border border-white/20"
+        className="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-black/30 hover:bg-black/50 text-white rounded-full flex items-center justify-center transition backdrop-blur-sm border border-white/20"
         aria-label="Previous slide"
       >
         <ChevronLeft size={20} />
       </button>
       <button
         onClick={next}
-        className="absolute right-3 md:right-5 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-black/30 hover:bg-black/50 text-white rounded-full flex items-center justify-center transition backdrop-blur-sm border border-white/20"
+        className="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-black/30 hover:bg-black/50 text-white rounded-full flex items-center justify-center transition backdrop-blur-sm border border-white/20"
         aria-label="Next slide"
       >
         <ChevronRight size={20} />
