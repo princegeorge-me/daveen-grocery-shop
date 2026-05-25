@@ -1,8 +1,9 @@
 'use client'
 
 import Link           from 'next/link'
-import { ShoppingCart, Menu, Search, User } from 'lucide-react'
+import { ShoppingCart, Menu, Search, User, X } from 'lucide-react'
 import { motion } from 'framer-motion'
+import { useState } from 'react'
 import { useCartStore } from '@/stores/cart.store'
 import { useUIStore }   from '@/stores/ui.store'
 
@@ -15,6 +16,7 @@ const navLinks = [
 ]
 
 export default function Header() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const { itemCount, toggleCart } = useCartStore()
   const { toggleSearch }          = useUIStore()
 
@@ -89,6 +91,7 @@ export default function Header() {
             </button>
 
             <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="md:hidden p-2 hover:opacity-70 transition-opacity"
               aria-label="Menu"
             >
@@ -97,6 +100,30 @@ export default function Header() {
           </div>
         </div>
       </div>
+
+      {/* Mobile Menu */}
+      {mobileMenuOpen && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
+          transition={{ duration: 0.2 }}
+          className="md:hidden bg-white border-b border-border shadow-md"
+        >
+          <div className="container-shop py-4 flex flex-col gap-4">
+            {navLinks.map((link) => (
+              <Link
+                key={link.label}
+                href={link.href}
+                onClick={() => setMobileMenuOpen(false)}
+                className="text-sm font-semibold text-foreground hover:text-brand-forest transition-colors px-2 py-2 rounded-lg hover:bg-muted"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </div>
+        </motion.div>
+      )}
     </header>
   )
 }
