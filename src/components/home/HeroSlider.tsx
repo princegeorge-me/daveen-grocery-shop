@@ -21,7 +21,7 @@ const SLIDES = [
   },
   {
     id:            2,
-    image:         '/images/fresh_produce/Ghana_yam.jpg',
+    image:         '/images/fresh_produce/hero-cabbage.jpg',
     position:      'object-center',
     badge:         '🌿 Fresh Arrivals This Week',
     headline:      'Farm-Fresh Produce,',
@@ -34,7 +34,7 @@ const SLIDES = [
   },
   {
     id:            3,
-    image:         '/images/meat_seafoods/goatmeat.jpg',
+    image:         '/images/meat_seafoods/hero-beef.jpg',
     position:      'object-center',
     badge:         '🔥 Best Sellers',
     headline:      'Premium Meats & Seafood,',
@@ -62,34 +62,40 @@ export default function HeroSlider() {
 
   const slide = SLIDES[current]
 
-  return (
-    <section
-      className="relative overflow-hidden min-h-[460px] md:min-h-[540px] lg:min-h-[580px]"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-    >
-      {/* ── Slide backgrounds (cross-fade) ── */}
-      {SLIDES.map((s, i) => (
-        <div
-          key={s.id}
-          className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${i === current ? 'opacity-100' : 'opacity-0'}`}
-        >
-          <Image
-            src={s.image}
-            alt={s.headline}
-            fill
-            sizes="100vw"
-            className={`object-cover ${s.position}`}
-            priority={i === 0}
-          />
-          <div className="absolute inset-0" style={{ background: s.gradient }} />
-          {/* Bottom vignette for mobile */}
-          <div className="absolute inset-0 md:hidden" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.4) 0%, transparent 50%)' }} />
-        </div>
-      ))}
+  const [promoSlide, setPromoSlide] = useState(0)
+  const promoImages = [
+    { id: 1, image: '/images/drinks_snacks/drinks-banner.png', title: 'Premium Drinks', category: 'Drinks & Snacks' },
+    { id: 2, image: '/images/meat_seafoods/hero-beef.jpg', title: 'Quality Meats', category: 'Meat & Seafood' },
+    { id: 3, image: '/images/fresh_produce/hero-cabbage.jpg', title: 'Fresh Produce', category: 'Fresh Arrivals' },
+  ]
 
-      {/* ── Content ── */}
-      <div className="container-shop relative z-10 py-16 md:py-24 lg:py-32">
+  return (
+    <section className="container-shop py-4 sm:py-6">
+      <div className="flex flex-col lg:flex-row gap-3 sm:gap-4 min-h-[280px] sm:h-[320px] md:h-[380px] lg:h-[420px]">
+        {/* ── Hero Card (100% on mobile, 75% on desktop) ── */}
+        <div className="w-full lg:w-3/4 relative rounded-xl sm:rounded-2xl overflow-hidden bg-white shadow-lg border border-gray-100">
+          {/* ── Slide backgrounds (cross-fade) ── */}
+          {SLIDES.map((s, i) => (
+            <div
+              key={s.id}
+              className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${i === current ? 'opacity-100' : 'opacity-0'}`}
+            >
+              <Image
+                src={s.image}
+                alt={s.headline}
+                fill
+                sizes="(max-width: 1024px) 100vw, 75vw"
+                className={`object-cover ${s.position}`}
+                priority={i === 0}
+              />
+              <div className="absolute inset-0" style={{ background: s.gradient }} />
+              {/* Bottom vignette for mobile */}
+              <div className="absolute inset-0 md:hidden" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.4) 0%, transparent 50%)' }} />
+            </div>
+          ))}
+
+          {/* ── Content ── */}
+          <div className="container-shop relative z-10 h-full py-8 md:py-12 lg:py-16 flex flex-col justify-center">
         <div className="max-w-xl lg:max-w-2xl">
           {/* Badge */}
           <div className="inline-flex items-center gap-2 bg-amber-400 text-amber-950 text-xs font-extrabold px-3 py-1.5 rounded-full uppercase tracking-wider mb-5 shadow-lg">
@@ -123,36 +129,70 @@ export default function HeroSlider() {
             </Link>
           </div>
         </div>
+          </div>
+        </div>
+
+        {/* ── Promotional Image Slider (25%) ── */}
+        <div className="hidden lg:flex w-1/4 flex-col gap-2">
+          {/* Main Promo Image */}
+          <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-lg border border-gray-100 group">
+            {promoImages.map((promo, idx) => (
+              <div
+                key={promo.id}
+                className={`absolute inset-0 transition-opacity duration-500 ${
+                  idx === promoSlide ? 'opacity-100' : 'opacity-0'
+                }`}
+              >
+                <Image
+                  src={promo.image}
+                  alt={promo.title}
+                  fill
+                  className="object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
+                  <p className="text-xs font-semibold text-amber-300 mb-1">{promo.category}</p>
+                  <h3 className="font-bold text-lg">{promo.title}</h3>
+                </div>
+              </div>
+            ))}
+
+            {/* Promo Nav Arrows */}
+            <button
+              onClick={() => setPromoSlide((p) => (p - 1 + promoImages.length) % promoImages.length)}
+              className="absolute left-2 top-1/2 -translate-y-1/2 z-10 w-8 h-8 bg-white/20 hover:bg-white/40 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+              aria-label="Previous promo"
+            >
+              <ChevronLeft size={16} />
+            </button>
+            <button
+              onClick={() => setPromoSlide((p) => (p + 1) % promoImages.length)}
+              className="absolute right-2 top-1/2 -translate-y-1/2 z-10 w-8 h-8 bg-white/20 hover:bg-white/40 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+              aria-label="Next promo"
+            >
+              <ChevronRight size={16} />
+            </button>
+          </div>
+
+        </div>
       </div>
 
-      {/* ── Prev / Next arrows ── */}
-      <button
-        onClick={prev}
-        className="absolute left-3 md:left-5 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-black/30 hover:bg-black/50 text-white rounded-full flex items-center justify-center transition backdrop-blur-sm border border-white/20"
-        aria-label="Previous slide"
-      >
-        <ChevronLeft size={20} />
-      </button>
-      <button
-        onClick={next}
-        className="absolute right-3 md:right-5 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-black/30 hover:bg-black/50 text-white rounded-full flex items-center justify-center transition backdrop-blur-sm border border-white/20"
-        aria-label="Next slide"
-      >
-        <ChevronRight size={20} />
-      </button>
-
-      {/* ── Dot indicators ── */}
-      <div className="absolute bottom-5 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2">
-        {SLIDES.map((_, i) => (
-          <button
-            key={i}
-            onClick={() => setCurrent(i)}
-            className={`rounded-full transition-all duration-300 ${
-              i === current ? 'w-7 h-2.5 bg-amber-400' : 'w-2.5 h-2.5 bg-white/40 hover:bg-white/70'
-            }`}
-            aria-label={`Slide ${i + 1}`}
-          />
-        ))}
+      {/* ── Prev / Next arrows (inside hero card) ── */}
+      <div className="absolute inset-0 z-20 pointer-events-none flex items-center justify-between group">
+        <button
+          onClick={prev}
+          className="pointer-events-auto w-8 h-8 bg-white/20 hover:bg-white/40 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity ml-2"
+          aria-label="Previous slide"
+        >
+          <ChevronLeft size={16} />
+        </button>
+        <button
+          onClick={next}
+          className="pointer-events-auto w-8 h-8 bg-white/20 hover:bg-white/40 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity mr-2"
+          aria-label="Next slide"
+        >
+          <ChevronRight size={16} />
+        </button>
       </div>
 
       {/* ── Slide counter ── */}

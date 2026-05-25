@@ -113,27 +113,27 @@ export default async function HomePage() {
       {/* ① Announcement ticker */}
       <PromoTicker />
 
-      {/* ② Hero slideshow */}
-      <HeroSlider />
-
-      {/* ③ Trust badge strip */}
+      {/* ② Trust badge strip */}
       <section className="bg-white border-b border-gray-100">
-        <div className="container-shop py-5">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-4">
+        <div className="container-shop py-3">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-2">
             {TRUST_BADGES.map(({ icon: Icon, title, desc }) => (
-              <div key={title} className="flex items-start gap-3">
-                <div className="w-10 h-10 rounded-xl bg-brand-forest/10 flex items-center justify-center shrink-0">
-                  <Icon size={19} className="text-brand-forest" />
+              <div key={title} className="flex items-start gap-2">
+                <div className="w-8 h-8 rounded-lg bg-brand-forest/10 flex items-center justify-center shrink-0">
+                  <Icon size={16} className="text-brand-forest" />
                 </div>
                 <div>
-                  <p className="font-semibold text-sm text-gray-900">{title}</p>
-                  <p className="text-xs text-gray-500 leading-relaxed mt-0.5">{desc}</p>
+                  <p className="font-semibold text-xs text-gray-900">{title}</p>
+                  <p className="text-[10px] text-gray-500 leading-tight mt-0.5 hidden sm:block">{desc}</p>
                 </div>
               </div>
             ))}
           </div>
         </div>
       </section>
+
+      {/* ③ Hero slideshow */}
+      <HeroSlider />
 
       {/* ④ Shop by Category */}
       <section className="container-shop py-12">
@@ -162,19 +162,10 @@ export default async function HomePage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
           {/* Card A — Free delivery */}
-          <div className="relative overflow-hidden rounded-3xl min-h-[200px] flex items-end" style={{ background: 'linear-gradient(135deg, #0f3d24 0%, #1a6b3c 60%, #2d9158 100%)' }}>
+          <div className="relative overflow-hidden rounded-3xl min-h-[200px] flex items-end" style={{ backgroundImage: 'url(/images/fresh_produce/unriped_plantain.jpg)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
+            <div className="absolute inset-0 bg-gradient-to-r from-green-900/95 via-green-800/80 to-transparent pointer-events-none" />
             <div className="absolute top-0 right-0 w-48 h-48 bg-white/5 rounded-full -translate-y-1/4 translate-x-1/4 pointer-events-none" />
             <div className="absolute bottom-0 left-16 w-32 h-32 bg-white/5 rounded-full translate-y-1/3 pointer-events-none" />
-            {/* Image inset */}
-            <div className="absolute right-0 bottom-0 w-44 h-full opacity-80">
-              <Image
-                src="/images/fresh_produce/unriped_plantain.jpg"
-                alt="Fresh plantain"
-                fill
-                className="object-cover object-center"
-                style={{ maskImage: 'linear-gradient(to left, rgba(0,0,0,0.7) 0%, transparent 100%)' }}
-              />
-            </div>
             <div className="relative z-10 p-7">
               <span className="inline-block bg-amber-400 text-amber-950 text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full mb-3">
                 Limited Offer
@@ -193,7 +184,8 @@ export default async function HomePage() {
           </div>
 
           {/* Card B — New arrivals */}
-          <div className="relative overflow-hidden rounded-3xl min-h-[200px] flex items-end" style={{ background: 'linear-gradient(135deg, #7c1d0f 0%, #b83a1a 60%, #e8541a 100%)' }}>
+          <div className="relative overflow-hidden rounded-3xl min-h-[200px] flex items-end" style={{ backgroundImage: 'url(/images/drinks_snacks/drinks-banner.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
+            <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/70 to-transparent pointer-events-none" />
             <div className="absolute top-0 right-0 w-48 h-48 bg-white/5 rounded-full -translate-y-1/4 translate-x-1/4 pointer-events-none" />
             <div className="absolute bottom-0 left-16 w-32 h-32 bg-white/5 rounded-full translate-y-1/3 pointer-events-none" />
             {/* Image inset */}

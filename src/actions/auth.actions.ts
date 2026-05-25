@@ -53,11 +53,21 @@ export async function signIn(input: SignInInput) {
   }
 
   const supabase = await createClient()
-  const { error } = await supabase.auth.signInWithPassword(validated.data)
+  const { data, error } = await supabase.auth.signInWithPassword(validated.data)
   if (error) return { success: false as const, error: 'Invalid email or password' }
 
+  // Fetch role to redirect admins to the admin panel
+  let role: string | null = null
+  if (data.user) {
+    const dbUser = await prisma.user.findUnique({
+      where: { supabaseId: data.user.id },
+      select: { role: true },
+    })
+    role = dbUser?.role ?? null
+  }
+
   revalidatePath('/', 'layout')
-  return { success: true as const }
+  return { success: true as const, role }
 }
 
 export async function signOut() {
