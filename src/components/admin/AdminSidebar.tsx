@@ -31,7 +31,7 @@ export function AdminSidebar({ user }: Props) {
   const isActive = (href: string, exact?: boolean) =>
     exact ? pathname === href : pathname.startsWith(href)
 
-  const SidebarContent = () => (
+  const navContent = (
     <>
       {/* Logo */}
       <div className="px-5 py-5 border-b border-white/10 flex items-center justify-between">
@@ -44,7 +44,6 @@ export function AdminSidebar({ user }: Props) {
             <p className="text-xs text-white/60 leading-none mt-0.5">Admin Panel</p>
           </div>
         </Link>
-        {/* Close button — mobile only */}
         <button
           onClick={() => setOpen(false)}
           className="lg:hidden p-1 rounded hover:bg-white/10 text-white/70"
@@ -82,7 +81,7 @@ export function AdminSidebar({ user }: Props) {
         <div className="px-3 py-2">
           <p className="text-sm font-medium text-white">{user.firstName} {user.lastName}</p>
           <p className="text-xs text-white/60 truncate">{user.email}</p>
-          <span className="mt-1 inline-block text-xs bg-white/20 px-2 py-0.5 rounded-full">
+          <span className="mt-1 inline-block text-xs bg-amber-400 text-amber-950 px-2 py-0.5 rounded-full font-bold">
             {user.role}
           </span>
         </div>
@@ -101,8 +100,8 @@ export function AdminSidebar({ user }: Props) {
 
   return (
     <>
-      {/* ── Mobile top bar ── */}
-      <div className="lg:hidden fixed top-0 left-0 right-0 z-50 h-14 bg-brand-forest flex items-center px-4 gap-3 shadow-md">
+      {/* Mobile top bar */}
+      <div className="lg:hidden fixed top-0 left-0 right-0 z-50 h-14 bg-[#1A6B3C] flex items-center px-4 gap-3 shadow-md">
         <button
           onClick={() => setOpen(true)}
           className="p-1.5 rounded-lg hover:bg-white/10 text-white"
@@ -110,13 +109,11 @@ export function AdminSidebar({ user }: Props) {
         >
           <Menu className="w-5 h-5" />
         </button>
-        <div className="flex items-center gap-2">
-          <Leaf className="w-4 h-4 text-white" />
-          <span className="font-bold text-white text-sm">Daveen Admin</span>
-        </div>
+        <Leaf className="w-4 h-4 text-white" />
+        <span className="font-bold text-white text-sm">Daveen Admin</span>
       </div>
 
-      {/* ── Mobile overlay ── */}
+      {/* Mobile overlay */}
       {open && (
         <div
           className="lg:hidden fixed inset-0 z-40 bg-black/50"
@@ -124,14 +121,12 @@ export function AdminSidebar({ user }: Props) {
         />
       )}
 
-      {/* ── Sidebar: slide-in on mobile, fixed on desktop ── */}
+      {/* Desktop sidebar — always visible via CSS, mobile slides in */}
       <aside
-        className={`fixed top-0 left-0 bottom-0 w-64 bg-brand-forest text-white flex flex-col z-50
-          transition-transform duration-300 ease-in-out
-          ${open ? 'translate-x-0' : '-translate-x-full'}
-          lg:translate-x-0`}
+        style={{ transform: open ? 'translateX(0)' : undefined }}
+        className="fixed top-0 left-0 bottom-0 w-64 bg-[#1A6B3C] text-white flex flex-col z-50 transition-transform duration-300 ease-in-out -translate-x-full lg:translate-x-0"
       >
-        <SidebarContent />
+        {navContent}
       </aside>
     </>
   )
