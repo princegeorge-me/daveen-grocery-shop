@@ -195,20 +195,6 @@ export default function HeroSlider() {
         </button>
       </div>
 
-      {/* ── Dot indicators ── */}
-      <div className="absolute bottom-5 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2">
-        {SLIDES.map((_, i) => (
-          <button
-            key={i}
-            onClick={() => setCurrent(i)}
-            className={`rounded-full transition-all duration-300 ${
-              i === current ? 'w-7 h-2.5 bg-amber-400' : 'w-2.5 h-2.5 bg-white/40 hover:bg-white/70'
-            }`}
-            aria-label={`Slide ${i + 1}`}
-          />
-        ))}
-      </div>
-
       {/* ── Slide counter ── */}
       <div className="absolute top-5 right-5 z-20 text-white/60 text-xs font-medium tabular-nums hidden md:block">
         {String(current + 1).padStart(2, '0')} / {String(SLIDES.length).padStart(2, '0')}
